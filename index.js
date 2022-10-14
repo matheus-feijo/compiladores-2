@@ -1,4 +1,4 @@
-import { Analisador } from "./src/Analisador";
+import { Analisador } from "./src/Analisador.js";
 
 
-Analisador.Lexico();
+const lex = Analisador.Lexico('./exemplo.txt');
