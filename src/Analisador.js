@@ -2,16 +2,23 @@ import { eachLine } from "line-reader";
 export class Analisador {
 
 
+
     static Lexico(url) {
+
+        const TYPE_TEXT = 0;
+        const TYPE_DIGIT = 1;
+        const TYPE_OPERADOR_LOGICO = 2;
+        const TYPE_OPERADOR_ARITMETICO = 3;
+        const TYPE_ESPECIAL_CARACTER = 4;
 
         const tokens = [];
         let estado = 0;
         let elemento = '';
 
 
-        const endToken = ()=>{
-            tokens.push(elemento);
-            console.log(elemento);
+        const endToken = (typeToken) => {
+            tokens.push({ type: typeToken, value: elemento });
+            console.log(tokens);
             console.log(" - - - - - ");
             elemento = "";
         }
@@ -26,99 +33,101 @@ export class Analisador {
             return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
         }
 
-
-        const isOperador = (c) => {
-            return c === '=' || c === '<' || c === '>' || c === ':'
-        }
-
         const isSpace = (c) => {
             return c === ' ' || c === '\t' || c === '\n' || c === '\r'
         }
 
-        const isOperadorCalculo = (c)=>{
-            return c === "*" || c==="-" || c==="+" || c==="/";
+
+        const isSpecialCaracter = (c) => {
+            return c === "{" || c === "}" || c === ";" || c === "," || c === "(" || c === ")" || c === "$";
         }
 
-        const isSpecialCaracter = (c)=>{
-            return c==="{" || c==="}" || c===";" || c==="," || c==="(" || c===")" || c==="$";
+        const isOperadorAritmetico = (c) => {
+            return c === '+' || c === '-' || c === '/' || c == '*'
         }
 
-        eachLine(url,(line)=>{
-            for(let i=0;i<line.length;i++){
-                if(estado ===0){
-                    if(isCaracter(line[i])){
+        const isOperadorLogico = (c) => {
+            return c === '=' || c === '<' || c === '>' || c === ':'
+        }
+
+
+
+        eachLine(url, (line) => {
+            for (let i = 0; i < line.length; i++) {
+                if (estado === 0) {
+                    if (isCaracter(line[i])) {
                         estado = 1;
                         elemento = elemento + line[i];
                     }
 
-                    else if(isDigit(line[i])){
+                    else if (isDigit(line[i])) {
                         elemento = elemento + line[i];
                         estado = 3;
                     }
 
-                    else if(isOperador(line[i])){
+                    else if (isOperadorLogico(line[i])) {
                         elemento = elemento + line[i];
                         estado = 5;
                     }
 
-                    else if(isSpace(line[i])){
+                    else if (isSpace(line[i])) {
                         estado = 0;
                     }
 
-                    else if(isOperadorCalculo(line[i])){
-                        estado = 0;
+                    else if (isOperadorAritmetico(line[i])) {
                         elemento = line[i];
-                        endToken();
+                        endToken(TYPE_OPERADOR_ARITMETICO);
+                        estado = 0;
                     }
 
-                    else if(isSpecialCaracter(line[i])){
+                    else if (isSpecialCaracter(line[i])) {
                         elemento = line[i];
-                        endToken();
+                        endToken(TYPE_ESPECIAL_CARACTER);
                         estado = 0;
                     }
 
 
                 }
 
-                else if(estado === 1){
-                    if(isCaracter(line[i]) || isDigit(line[i])){
+                else if (estado === 1) {
+                    if (isCaracter(line[i]) || isDigit(line[i])) {
                         estado = 1;
                         elemento = elemento + line[i];
-                    }else{
-                        endToken();
+                    } else {
+                        //voltar uma casa
+                        i--;
+                        endToken(TYPE_TEXT);
                         estado = 0;
                     }
 
 
 
                 }
-                else if(estado ===3){
-                    if(isDigit(line[i])){
+                else if (estado === 3) {
+                    if (isDigit(line[i])) {
                         estado = 3;
                         elemento = elemento + line[i];
-                    }else{
-                        endToken();
+                    } else {
+                        i--;
+                        endToken(TYPE_DIGIT);
                         estado = 0;
 
                     }
 
                 }
-                else if(estado === 5){
-                    if(isOperador(line[i])){
-                        estado =6;
+                else if (estado === 5) {
+                    if (isOperadorLogico(line[i])) {
                         elemento = elemento + line[i];
-                    }else {
-                        endToken();
+                        endToken(TYPE_OPERADOR_LOGICO);
+                        estado = 0;
+                    } else {
+                        i--;
+                        endToken(TYPE_OPERADOR_LOGICO);
                         estado = 0;
 
                     }
-                }else if(estado === 6){
-                    endToken();
-                    estado = 0;
                 }
             }
         })
-        
-        console.log(tokens);
     }
 }
