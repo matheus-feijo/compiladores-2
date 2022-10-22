@@ -1,4 +1,5 @@
 import { eachLine } from "line-reader";
+import { retiraComentarios } from "./retiraComentarios.js";
 import { sintatico } from "./sintatico.js";
 
 export function lexico(url) {
@@ -9,6 +10,7 @@ export function lexico(url) {
     const TYPE_ESPECIAL_CARACTER = 4;
 
     const tokens = [];
+    let flag = 0;
     let estado = 0;
     let elemento = '';
 
@@ -34,7 +36,7 @@ export function lexico(url) {
 
 
     const isSpecialCaracter = (c) => {
-        return c === "{" || c === "}" || c === ";" || c === "," || c === "(" || c === ")" || c === "$";
+        return c === "{" || c === "}" || c === ";" || c === "," || c === "(" || c === ")" || c === "$" || c === ".";
     }
 
     const isOperadorAritmetico = (c) => {
@@ -78,6 +80,10 @@ export function lexico(url) {
                     elemento = line[i];
                     endToken(TYPE_ESPECIAL_CARACTER);
                     estado = 0;
+                }
+
+                else {
+                    flag = 1;
                 }
 
 
@@ -124,7 +130,12 @@ export function lexico(url) {
         }
 
         if (last) {
-            sintatico(tokens);
+            if (flag === 1) {
+                throw new Error('Erro lexico');
+            } else {
+                sintatico(retiraComentarios(tokens));
+            }
+
         }
     })
 }
