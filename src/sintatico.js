@@ -5,23 +5,11 @@ export function sintatico(tokens) {
     var listaTokens = tokens;
     var ponteiro = 0;
     var tipoAtual = null;
-    var instrucoes = [];
     const tabelaVariaveis = [];
-
-    // console.log(tokens);
 
     const pegaTokenAtual = () => {
         return listaTokens[ponteiro];
     }
-
-    const isInt = (n) => {
-        return Number(n) === n && n % 1 === 0;
-    }
-
-    const isFloat = (n) => {
-        return Number(n) === n && n % 1 !== 0;
-    }
-
 
     const programa = () => {
 
@@ -42,7 +30,6 @@ export function sintatico(tokens) {
             ponteiro++;
         }
 
-        console.log(ponteiro);
         if (listaTokens.length === ponteiro) {
             console.log("analisador sintatico feito")
         }
@@ -351,12 +338,4 @@ export function sintatico(tokens) {
     }
 
     programa();
-
-
-
-
-
-
-    //programa();
-
 }
