@@ -5,9 +5,7 @@ import { sintatico } from "./sintatico.js";
 export function lexico(url) {
     const TYPE_TEXT = 0;
     const TYPE_DIGIT = 1;
-    const TYPE_OPERADOR_LOGICO = 2;
-    const TYPE_OPERADOR_ARITMETICO = 3;
-    const TYPE_ESPECIAL_CARACTER = 4;
+    const TYPE_SIMBOLO = 2;
 
     const tokens = [];
     let flag = 0;
@@ -72,13 +70,13 @@ export function lexico(url) {
 
                 else if (isOperadorAritmetico(line[i])) {
                     elemento = line[i];
-                    endToken(TYPE_OPERADOR_ARITMETICO);
+                    endToken(TYPE_SIMBOLO);
                     estado = 0;
                 }
 
                 else if (isSpecialCaracter(line[i])) {
                     elemento = line[i];
-                    endToken(TYPE_ESPECIAL_CARACTER);
+                    endToken(TYPE_SIMBOLO);
                     estado = 0;
                 }
 
@@ -114,11 +112,11 @@ export function lexico(url) {
             else if (estado === 5) {
                 if (isOperadorLogico(line[i])) {
                     elemento = elemento + line[i];
-                    endToken(TYPE_OPERADOR_LOGICO);
+                    endToken(TYPE_SIMBOLO);
                     estado = 0;
                 } else {
                     i--;
-                    endToken(TYPE_OPERADOR_LOGICO);
+                    endToken(TYPE_SIMBOLO);
                     estado = 0;
 
                 }
@@ -131,7 +129,6 @@ export function lexico(url) {
             } else {
                 sintatico(retiraComentarios(tokens));
             }
-
         }
     })
 }
