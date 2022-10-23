@@ -99,9 +99,6 @@ export function lexico(url) {
                     endToken(TYPE_TEXT);
                     estado = 0;
                 }
-
-
-
             }
             else if (estado === 3) {
                 if (isDigit(line[i])) {
@@ -111,7 +108,6 @@ export function lexico(url) {
                     i--;
                     endToken(TYPE_DIGIT);
                     estado = 0;
-
                 }
 
             }
