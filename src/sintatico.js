@@ -1,9 +1,3 @@
-
-const TOKEN_IDENTIFICADOR = 0;
-const TOKEN_NUM_INTEIRO = 1;
-const TOKEN_NUM_REAL = 2;
-const TOKEN_SIMBOLO = 3;
-
 const PALAVRAS_RESERVADAS = ['if', 'else', 'begin', 'end', 'program', 'while', 'else', 'then', 'do', 'real', 'integer', 'read', 'write'];
 const OPERADORES_RELACIONAIS = ['=', '<>', '<=', '>=', '<', '>']
 
@@ -12,8 +6,6 @@ export function sintatico(tokens) {
     var ponteiro = 0;
     var tipoAtual = null;
     var instrucoes = [];
-    var tabelaSimbolos = {};
-    var tabelaSimbolosPosicao = {}
     const tabelaVariaveis = [];
 
     // console.log(tokens);
@@ -235,6 +227,7 @@ export function sintatico(tokens) {
                 ponteiro++;
 
                 if (pegaTokenAtual().value === ':=') {
+                    //console.log(pegaTokenAtual());
                     ponteiro++;
                     expressao();
                     return;
@@ -276,8 +269,9 @@ export function sintatico(tokens) {
     const op_un = () => {
         if (pegaTokenAtual().value === '-') {
             ponteiro++;
+        } else {
+            return
         }
-        return
     }
 
     const fator = () => {
@@ -290,11 +284,14 @@ export function sintatico(tokens) {
 
 
         } else if (pegaTokenAtual().type === 1) {
-            if (isInt(pegaTokenAtual().value)) {
-                ponteiro++;
-            } else if (isFloat(pegaTokenAtual().value)) {
-                ponteiro++;
-            }
+
+            // if (isInt(pegaTokenAtual().value)) {
+
+            // } else if (isFloat(pegaTokenAtual().value)) {
+
+            // }
+
+            ponteiro++;
 
         } else if (pegaTokenAtual().value === '(') {
             ponteiro++;
