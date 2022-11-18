@@ -5,7 +5,8 @@ export function sintatico(tokens) {
     var listaTokens = tokens;
     var ponteiro = 0;
     var tipoAtual = null;
-    const tabelaVariaveis = [];
+    var tabelaVariaveis = [];
+    var instrucoes = [];
 
     const pegaTokenAtual = () => {
         return listaTokens[ponteiro];
@@ -14,6 +15,7 @@ export function sintatico(tokens) {
     const programa = () => {
 
         if (pegaTokenAtual().value === 'program') {
+            instrucoes.push('INPP');
             ponteiro++;
         } else {
             throw new Error('erro esperado: program obtido:', pegaTokenAtual().value);
@@ -27,11 +29,13 @@ export function sintatico(tokens) {
         }
 
         if (pegaTokenAtual().value === '.') {
+            instrucoes.push('PARA');
             ponteiro++;
         }
 
         if (listaTokens.length === ponteiro) {
-            console.log("analisador sintatico feito")
+            console.log("programa compilado")
+            console.log(instrucoes);
         }
     }
 
@@ -96,6 +100,7 @@ export function sintatico(tokens) {
                 throw new Error('variavel ja declarada');
             } else {
                 tabelaVariaveis.push(pegaTokenAtual().value)
+                instrucoes.push('ALME 1');
             }
 
             ponteiro++;
@@ -137,6 +142,8 @@ export function sintatico(tokens) {
                 ponteiro++;
 
                 if (pegaTokenAtual().type === 0 && tabelaVariaveis.includes(pegaTokenAtual().value)) {
+                    instrucoes.push('LEIT');
+                    instrucoes.push('ARMZ ' + tabelaVariaveis.indexOf(pegaTokenAtual().value))
                     ponteiro++;
 
                     if (pegaTokenAtual().value === ')') {
@@ -147,7 +154,7 @@ export function sintatico(tokens) {
                     }
 
                 } else {
-                    console.log(tabelaVariaveis);
+                    // console.log(tabelaVariaveis);
                     throw new Error('variavel nao foi declarada ou encontrada no codigo')
                 }
 
@@ -162,6 +169,9 @@ export function sintatico(tokens) {
                 ponteiro++;
 
                 if (pegaTokenAtual().type === 0 && tabelaVariaveis.includes(pegaTokenAtual().value)) {
+                    instrucoes.push('CRVL ' + tabelaVariaveis.indexOf(pegaTokenAtual().value));
+                    instrucoes.push('IMPR');
+
                     ponteiro++;
 
                     if (pegaTokenAtual().value === ')') {
@@ -183,10 +193,12 @@ export function sintatico(tokens) {
         } else if (pegaTokenAtual().value === 'if') {
             ponteiro++;
             condicao();
+            const posCondicao = instrucoes.length - 1;
 
             if (pegaTokenAtual().value === 'then') {
                 ponteiro++;
                 comandos();
+                instrucoes[posCondicao] = 'DSVF' + instrucoes.length
                 pfalsa();
 
                 if (pegaTokenAtual().value === '$') {
@@ -197,11 +209,14 @@ export function sintatico(tokens) {
 
         } else if (pegaTokenAtual().value === 'while') {
             ponteiro++;
+            const guardaCondicao = instrucoes.length - 1;
             condicao();
-
+            const guardaInstrucao = instrucoes.length - 1;
             if (pegaTokenAtual().value === 'do') {
                 ponteiro++;
                 comandos();
+                instrucoes.push('DSVI' + guardaCondicao);
+                instrucoes[guardaCondicao] = 'DSVF ' + instrucoes.length - 1;
 
                 if (pegaTokenAtual().value === '$') {
                     ponteiro++;
@@ -217,6 +232,7 @@ export function sintatico(tokens) {
                     //console.log(pegaTokenAtual());
                     ponteiro++;
                     expressao();
+                    instrucoes.push('ARMZ ' + tabelaVariaveis.indexOf(listaTokens[ponteiro - 3].value));
                     return;
                 } else {
                     throw new Error('esperado: := obtido: ', pegaTokenAtual().value)
@@ -231,12 +247,36 @@ export function sintatico(tokens) {
     const condicao = () => {
         expressao();
         relacao();
+        const instrucaoTipo = instrucoes[instrucoes.length - 1];
+        instrucoes = instrucoes.slice(0, instrucoes.length - 1);
         expressao();
+
+        instrucoes.push(instrucaoTipo);
+        instrucoes.push('DSVF');
 
     }
 
     const relacao = () => {
         if (OPERADORES_RELACIONAIS.includes(pegaTokenAtual().value)) {
+
+            if (pegaTokenAtual().value === '=') {
+                instrucoes.push('CPIG');
+
+            } else if (pegaTokenAtual().value === '<>') {
+                instrucoes.push('CDES');
+
+            } else if (pegaTokenAtual().value === '>=') {
+                instrucoes.push('CMAI');
+
+            } else if (pegaTokenAtual().value === '<=') {
+                instrucoes.push('CPMI');
+
+            } else if (pegaTokenAtual().value === '<') {
+                instrucoes.push('CPME');
+
+            } else if (pegaTokenAtual().value === '>') {
+                instrucoes.push('CPMA');
+            }
             ponteiro++;
         }
         return
@@ -269,14 +309,11 @@ export function sintatico(tokens) {
                 throw new Error('variavel nao foi declarada: ', pegaTokenAtual().value);
             }
 
-
+            // console.log(listaTokens[ponteiro].value);
+            instrucoes.push('CRVL ' + tabelaVariaveis.indexOf(listaTokens[ponteiro].value))
         } else if (pegaTokenAtual().type === 1) {
 
-            // if (isInt(pegaTokenAtual().value)) {
-
-            // } else if (isFloat(pegaTokenAtual().value)) {
-
-            // }
+            instrucoes.push('CRCT ' + listaTokens[ponteiro].value);
 
             ponteiro++;
 
@@ -304,6 +341,12 @@ export function sintatico(tokens) {
 
     const op_ad = () => {
         if (pegaTokenAtual().value === '+' || pegaTokenAtual().value === '-') {
+
+            if (pegaTokenAtual().value === '+') {
+                instrucoes.push('SOMA');
+            } else if (pegaTokenAtual().value === '-') {
+                instrucoes.push('SUBT');
+            }
             ponteiro++;
         }
 
@@ -330,8 +373,11 @@ export function sintatico(tokens) {
 
     const pfalsa = () => {
         if (pegaTokenAtual().value === 'else') {
+            const tamanhoInstrucao = instrucoes.length - 1;
+            instrucoes.push('DSVI');
             ponteiro++;
             comandos();
+            instrucoes[tamanhoInstrucao + 1] = 'DSVI' + instrucoes.length;
         } else {
             return;
         }
