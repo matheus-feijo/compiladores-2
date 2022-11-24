@@ -1,3 +1,5 @@
+import { gerarArquivoTxt } from "./gerarArquivoTxt.js";
+
 const PALAVRAS_RESERVADAS = ['if', 'else', 'begin', 'end', 'program', 'while', 'else', 'then', 'do', 'real', 'integer', 'read', 'write'];
 const OPERADORES_RELACIONAIS = ['=', '<>', '<=', '>=', '<', '>']
 
@@ -34,8 +36,10 @@ export function sintatico(tokens) {
         }
 
         if (listaTokens.length === ponteiro) {
-            console.log("programa compilado")
+            console.log("programa compilado");
             console.log(instrucoes);
+            gerarArquivoTxt(instrucoes);
+
         }
     }
 
@@ -198,7 +202,8 @@ export function sintatico(tokens) {
             if (pegaTokenAtual().value === 'then') {
                 ponteiro++;
                 comandos();
-                instrucoes[posCondicao] = 'DSVF' + instrucoes.length
+                instrucoes[posCondicao] = 'DSVF ' + instrucoes.length
+                //console.log(instrucoes[posCondicao]);
                 pfalsa();
 
                 if (pegaTokenAtual().value === '$') {
@@ -215,8 +220,10 @@ export function sintatico(tokens) {
             if (pegaTokenAtual().value === 'do') {
                 ponteiro++;
                 comandos();
-                instrucoes.push('DSVI' + guardaCondicao);
-                instrucoes[guardaCondicao] = 'DSVF ' + instrucoes.length - 1;
+                instrucoes.push('DSVI ' + guardaCondicao);
+                console.log(instrucoes.length - 1);
+                instrucoes[guardaInstrucao] = 'DSVF ' + (instrucoes.length - 1);
+                console.log(instrucoes[guardaInstrucao]);
 
                 if (pegaTokenAtual().value === '$') {
                     ponteiro++;
@@ -251,6 +258,7 @@ export function sintatico(tokens) {
         instrucoes = instrucoes.slice(0, instrucoes.length - 1);
         expressao();
 
+        // console.log("testeeee  " + instrucaoTipo);
         instrucoes.push(instrucaoTipo);
         instrucoes.push('DSVF');
 
@@ -309,10 +317,12 @@ export function sintatico(tokens) {
                 throw new Error('variavel nao foi declarada: ', pegaTokenAtual().value);
             }
 
-            // console.log(listaTokens[ponteiro].value);
-            instrucoes.push('CRVL ' + tabelaVariaveis.indexOf(listaTokens[ponteiro].value))
+            //console.log(listaTokens[ponteiro].value);
+            //console.log(listaTokens[ponteiro - 1]);
+            instrucoes.push('CRVL ' + listaTokens[ponteiro - 1].value + '*')
         } else if (pegaTokenAtual().type === 1) {
 
+            //console.log(listaTokens[ponteiro].value);
             instrucoes.push('CRCT ' + listaTokens[ponteiro].value);
 
             ponteiro++;
@@ -355,6 +365,11 @@ export function sintatico(tokens) {
 
     const mais_fatores = () => {
         if (pegaTokenAtual().value === '*' || pegaTokenAtual().value === '/') {
+            if (pegaTokenAtual().value === '/') {
+                instrucoes.push('DIVI')
+            } else if (pegaTokenAtual().value === '*') {
+                instrucoes.push('MULT')
+            }
             op_mul();
             fator();
             mais_fatores();
@@ -377,7 +392,7 @@ export function sintatico(tokens) {
             instrucoes.push('DSVI');
             ponteiro++;
             comandos();
-            instrucoes[tamanhoInstrucao + 1] = 'DSVI' + instrucoes.length;
+            instrucoes[tamanhoInstrucao + 1] = 'DSVI ' + instrucoes.length;
         } else {
             return;
         }
