@@ -221,9 +221,9 @@ export function sintatico(tokens) {
                 ponteiro++;
                 comandos();
                 instrucoes.push('DSVI ' + guardaCondicao);
-                console.log(instrucoes.length - 1);
+                //console.log(instrucoes.length - 1);
                 instrucoes[guardaInstrucao] = 'DSVF ' + (instrucoes.length - 1);
-                console.log(instrucoes[guardaInstrucao]);
+                //console.log(instrucoes[guardaInstrucao]);
 
                 if (pegaTokenAtual().value === '$') {
                     ponteiro++;
