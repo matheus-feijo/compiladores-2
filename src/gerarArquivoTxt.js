@@ -6,8 +6,7 @@ export const gerarArquivoTxt = (instrucoes) => {
     // console.log(juntarElementos);
     fs.writeFile('saida.txt', juntarElementos, (erro) => {
         if (erro) {
-            console.log('deu ruim')
-            return;
+            throw new Error('erro ao gerar aquivo');
         }
 
         console.log("arquivo salvo");

@@ -173,6 +173,7 @@ export function sintatico(tokens) {
                 ponteiro++;
 
                 if (pegaTokenAtual().type === 0 && tabelaVariaveis.includes(pegaTokenAtual().value)) {
+                    // instrucoes.push('CRVL ' + pegaTokenAtual().value + "*");
                     instrucoes.push('CRVL ' + tabelaVariaveis.indexOf(pegaTokenAtual().value));
                     instrucoes.push('IMPR');
 
@@ -237,9 +238,13 @@ export function sintatico(tokens) {
 
                 if (pegaTokenAtual().value === ':=') {
                     //console.log(pegaTokenAtual());
+                    const guardaPosicaoArmz = listaTokens[ponteiro - 1].value;
                     ponteiro++;
                     expressao();
-                    instrucoes.push('ARMZ ' + tabelaVariaveis.indexOf(listaTokens[ponteiro - 3].value));
+
+                    instrucoes.push('ARMZ ' + tabelaVariaveis.indexOf(guardaPosicaoArmz));
+
+                    // instrucoes.push('ARMZ ' + guardaPosicaoArmz + '*');
                     return;
                 } else {
                     throw new Error('esperado: := obtido: ', pegaTokenAtual().value)
@@ -319,7 +324,8 @@ export function sintatico(tokens) {
 
             //console.log(listaTokens[ponteiro].value);
             //console.log(listaTokens[ponteiro - 1]);
-            instrucoes.push('CRVL ' + listaTokens[ponteiro - 1].value + '*')
+            // instrucoes.push('CRVL ' + listaTokens[ponteiro - 1].value + '*')
+            instrucoes.push('CRVL ' + tabelaVariaveis.indexOf(listaTokens[ponteiro - 1].value));
         } else if (pegaTokenAtual().type === 1) {
 
             //console.log(listaTokens[ponteiro].value);
