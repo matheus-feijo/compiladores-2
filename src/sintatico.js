@@ -149,7 +149,6 @@ export function sintatico(tokens) {
                     instrucoes.push('LEIT');
                     instrucoes.push('ARMZ ' + tabelaVariaveis.indexOf(pegaTokenAtual().value))
                     ponteiro++;
-
                     if (pegaTokenAtual().value === ')') {
                         ponteiro++;
                         return;
@@ -203,7 +202,8 @@ export function sintatico(tokens) {
             if (pegaTokenAtual().value === 'then') {
                 ponteiro++;
                 comandos();
-                instrucoes[posCondicao] = 'DSVF ' + instrucoes.length
+                // console.log(instrucoes.length - 1);
+                instrucoes[posCondicao] = 'DSVF ' + (instrucoes.length - 1)
                 //console.log(instrucoes[posCondicao]);
                 pfalsa();
 
@@ -321,10 +321,6 @@ export function sintatico(tokens) {
             } else {
                 throw new Error('variavel nao foi declarada: ', pegaTokenAtual().value);
             }
-
-            //console.log(listaTokens[ponteiro].value);
-            //console.log(listaTokens[ponteiro - 1]);
-            // instrucoes.push('CRVL ' + listaTokens[ponteiro - 1].value + '*')
             instrucoes.push('CRVL ' + tabelaVariaveis.indexOf(listaTokens[ponteiro - 1].value));
         } else if (pegaTokenAtual().type === 1) {
 
@@ -371,11 +367,13 @@ export function sintatico(tokens) {
 
     const mais_fatores = () => {
         if (pegaTokenAtual().value === '*' || pegaTokenAtual().value === '/') {
+            let guardaInstrucao;
             if (pegaTokenAtual().value === '/') {
-                instrucoes.push('DIVI')
+                guardaInstrucao = 'DIVI'
             } else if (pegaTokenAtual().value === '*') {
-                instrucoes.push('MULT')
+                guardaInstrucao = 'MULT';
             }
+            instrucoes.push(guardaInstrucao);
             op_mul();
             fator();
             mais_fatores();
@@ -398,7 +396,7 @@ export function sintatico(tokens) {
             instrucoes.push('DSVI');
             ponteiro++;
             comandos();
-            instrucoes[tamanhoInstrucao + 1] = 'DSVI ' + instrucoes.length;
+            instrucoes[tamanhoInstrucao + 1] = 'DSVI ' + (instrucoes.length - 1);
         } else {
             return;
         }
