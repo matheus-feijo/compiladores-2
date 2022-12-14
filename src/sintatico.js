@@ -203,7 +203,7 @@ export function sintatico(tokens) {
                 ponteiro++;
                 comandos();
                 // console.log(posCondicao);
-                instrucoes[posCondicao] = 'DSVF ' + (instrucoes.length - 1)
+                instrucoes[posCondicao] = 'DSVF ' + (instrucoes.length)
                 //console.log(instrucoes[posCondicao]);
                 pfalsa();
 
@@ -223,7 +223,7 @@ export function sintatico(tokens) {
                 comandos();
                 instrucoes.push('DSVI ' + guardaCondicao);
                 // console.log(guardaInstrucao);
-                instrucoes[guardaInstrucao] = 'DSVF ' + (instrucoes.length - 1);
+                instrucoes[guardaInstrucao] = 'DSVF ' + (instrucoes.length);
                 //console.log(instrucoes[guardaInstrucao]);
 
                 if (pegaTokenAtual().value === '$') {
@@ -396,7 +396,7 @@ export function sintatico(tokens) {
             instrucoes.push('DSVI');
             ponteiro++;
             comandos();
-            instrucoes[tamanhoInstrucao + 1] = 'DSVI ' + (instrucoes.length - 1);
+            instrucoes[tamanhoInstrucao + 1] = 'DSVI ' + (instrucoes.length);
         } else {
             return;
         }

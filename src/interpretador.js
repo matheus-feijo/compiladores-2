@@ -27,8 +27,7 @@ export const interpretador = () => {
                 memoria.push(0);
 
             } else if (instrucaoAtual[0] === 'CRVL') {
-                pilha.push(memoria[instrucaoAtual[1]])
-                console.log(pilha);
+                pilha.push(memoria[instrucaoAtual[1]]);
 
 
             } else if (instrucaoAtual[0] === 'ARMZ') {
@@ -42,6 +41,7 @@ export const interpretador = () => {
 
                 if (instrucaoSeguinte[0] === 'CRVL') {
                     pilha.push(memoria[instrucaoSeguinte[1]]);
+
                 } else if (instrucaoSeguinte[0] === 'CRCT') {
                     pilha.push(instrucaoSeguinte[1]);
                 }
@@ -96,7 +96,6 @@ export const interpretador = () => {
                 const value1 = pilha.pop()
                 const value2 = pilha.pop()
                 pilha.push(parseFloat(value2) > parseFloat(value1));
-                console.log(pilha);
 
             } else if (instrucaoAtual[0] === 'CPIG') {
                 const value1 = pilha.pop()
@@ -126,7 +125,7 @@ export const interpretador = () => {
                 }
 
             } else if (instrucaoAtual[0] === 'DSVI') {
-                console.log("entrei");
+                // console.log(instrucaoAtual);
                 ponteiro = parseInt(instrucaoAtual[1]);
 
             } else if (instrucaoAtual[0] === 'LEIT') {
@@ -134,6 +133,7 @@ export const interpretador = () => {
                 //pilha.push()
 
             } else if (instrucaoAtual[0] === 'IMPR') {
+                // console.log(memoria);
                 console.log("IMPRIME:" + pilha.pop());
 
             } else if (instrucaoAtual[0] === 'PARA') {
