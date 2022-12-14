@@ -202,7 +202,7 @@ export function sintatico(tokens) {
             if (pegaTokenAtual().value === 'then') {
                 ponteiro++;
                 comandos();
-                // console.log(instrucoes.length - 1);
+                // console.log(posCondicao);
                 instrucoes[posCondicao] = 'DSVF ' + (instrucoes.length - 1)
                 //console.log(instrucoes[posCondicao]);
                 pfalsa();
@@ -222,7 +222,7 @@ export function sintatico(tokens) {
                 ponteiro++;
                 comandos();
                 instrucoes.push('DSVI ' + guardaCondicao);
-                //console.log(instrucoes.length - 1);
+                // console.log(guardaInstrucao);
                 instrucoes[guardaInstrucao] = 'DSVF ' + (instrucoes.length - 1);
                 //console.log(instrucoes[guardaInstrucao]);
 

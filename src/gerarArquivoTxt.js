@@ -1,4 +1,5 @@
 import fs from "fs";
+import { interpretador } from "./interpretador.js";
 
 export const gerarArquivoTxt = (instrucoes) => {
     const juntarElementos = instrucoes.join('\n');
@@ -10,5 +11,7 @@ export const gerarArquivoTxt = (instrucoes) => {
         }
 
         console.log("arquivo salvo");
+
+        interpretador();
     })
 }
