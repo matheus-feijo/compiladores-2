@@ -337,6 +337,8 @@ export function sintatico(tokens) {
                 ponteiro++;
                 return;
             }
+        } else {
+            throw new Error("Erro sintatico");
         }
     }
 

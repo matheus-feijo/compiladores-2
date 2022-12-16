@@ -10,8 +10,6 @@ export const gerarArquivoTxt = (instrucoes) => {
             throw new Error('erro ao gerar aquivo');
         }
 
-        console.log("arquivo salvo");
-
         interpretador();
     })
 }

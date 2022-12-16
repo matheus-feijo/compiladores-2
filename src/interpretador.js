@@ -34,7 +34,6 @@ export const interpretador = () => {
                 const valorAtual = pilha.pop();
 
                 memoria[instrucaoAtual[1]] = valorAtual;
-                //console.log(memoria);
 
             } else if (instrucaoAtual[0] === 'SOMA') {
                 const instrucaoSeguinte = instrucoes[ponteiro + 1].split(' ');
@@ -51,18 +50,35 @@ export const interpretador = () => {
 
 
                 pilha.push(parseFloat(value2) + parseFloat(value1));
-                //console.log("soma -->", pilha);
                 ponteiro++;
 
             } else if (instrucaoAtual[0] === 'SUBT') {
+                const instrucaoSeguinte = instrucoes[ponteiro + 1].split(' ');
+
+                if (instrucaoSeguinte[0] === 'CRVL') {
+                    pilha.push(memoria[instrucaoSeguinte[1]]);
+                } else if (instrucaoSeguinte[0] === 'CRCT') {
+                    pilha.push(instrucaoSeguinte[1]);
+                }
+
                 const value1 = pilha.pop()
                 const value2 = pilha.pop()
-                pilha.push(parseFloat(value1) - parseFloat(value2))
+                pilha.push(parseFloat(value2) - parseFloat(value1));
+                ponteiro++;
 
             } else if (instrucaoAtual[0] === 'DIVI') {
+                const instrucaoSeguinte = instrucoes[ponteiro + 1].split(' ');
+
+                if (instrucaoSeguinte[0] === 'CRVL') {
+                    pilha.push(memoria[instrucaoSeguinte[1]]);
+                } else if (instrucaoSeguinte[0] === 'CRCT') {
+                    pilha.push(instrucaoSeguinte[1]);
+                }
+
                 const value1 = pilha.pop()
                 const value2 = pilha.pop()
-                pilha.push(parseFloat(value1) / parseFloat(value2))
+                pilha.push(parseFloat(value2) / parseFloat(value1));
+                ponteiro++;
 
             } else if (instrucaoAtual[0] === 'MULT') {
                 const instrucaoSeguinte = instrucoes[ponteiro + 1].split(' ');
@@ -122,25 +138,23 @@ export const interpretador = () => {
                 const value = pilha.pop();
                 if (value === false) {
                     ponteiro = parseInt(instrucaoAtual[1]);
+
                 }
 
             } else if (instrucaoAtual[0] === 'DSVI') {
-                // console.log(instrucaoAtual);
                 ponteiro = parseInt(instrucaoAtual[1]);
 
             } else if (instrucaoAtual[0] === 'LEIT') {
+                console.log("ENTRADA ==== ", ENTRADA_VALOR_A);
                 pilha.push(ENTRADA_VALOR_A);
-                //pilha.push()
 
             } else if (instrucaoAtual[0] === 'IMPR') {
-                // console.log(memoria);
                 console.log("IMPRIME:" + pilha.pop());
 
             } else if (instrucaoAtual[0] === 'PARA') {
                 break;
             }
 
-            //console.log("ponteiro ---> ", ponteiro);
             ponteiro++;
         }
 
