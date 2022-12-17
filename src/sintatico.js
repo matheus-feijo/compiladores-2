@@ -223,7 +223,7 @@ export function sintatico(tokens) {
                 comandos();
                 instrucoes.push('DSVI ' + guardaCondicao);
                 // console.log(guardaInstrucao);
-                instrucoes[guardaInstrucao] = 'DSVF ' + (instrucoes.length);
+                instrucoes[guardaInstrucao] = 'DSVF ' + (instrucoes.length - 1);
                 //console.log(instrucoes[guardaInstrucao]);
 
                 if (pegaTokenAtual().value === '$') {
