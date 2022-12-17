@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-const ENTRADA_VALOR_A = 4;
+const ENTRADA_VALOR = 4;
 
 export const interpretador = () => {
     fs.readFile('./saida.txt', 'utf-8', (erro, data) => {
@@ -156,8 +156,8 @@ export const interpretador = () => {
                 ponteiro = parseInt(instrucaoAtual[1]);
 
             } else if (instrucaoAtual[0] === 'LEIT') {
-                console.log("ENTRADA ==== ", ENTRADA_VALOR_A);
-                pilha.push(ENTRADA_VALOR_A);
+                console.log("ENTRADA ==== ", ENTRADA_VALOR);
+                pilha.push(ENTRADA_VALOR);
 
             } else if (instrucaoAtual[0] === 'IMPR') {
                 console.log("IMPRIME:" + pilha.pop());
