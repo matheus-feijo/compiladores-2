@@ -1,3 +1,6 @@
+### para leitura do arquivo de forma facilitada foi utilizado o line reader para facilitar a leitura de arquivos txt na linguagem escolhida
+# é preciso realizar um NPM INSTALL no diretorio do projeto para assim roda-lo corretamente
+
 ### Sintatico
 
 * FIRST <programa> = {program ident}
